@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ShieldCheck, TrendingUp, Coins, Layers, CreditCard, Lock, ArrowRight, RefreshCw } from 'lucide-react';
 
@@ -31,12 +31,14 @@ export default function PublicPage() {
     balanceSharesNeeded: 250,
     totalMoneyCollected: 0,
     balanceMoneyNeeded: 100000,
+    refundCompletedAmount: 0,
+    refundCompletedCount: 0,
   });
   const [contributors, setContributors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch('/api/contributors');
@@ -50,7 +52,7 @@ export default function PublicPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const handleRefresh = async () => {
     setRefreshing(true);
@@ -66,7 +68,13 @@ export default function PublicPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 2000);
+
+    return () => clearInterval(intervalId);
+  }, [fetchData]);
 
   const progressPercent = Math.min(
     100,
@@ -78,13 +86,6 @@ export default function PublicPage() {
       {/* Top Bar */}
       <header className="border-b border-slate-800 bg-slate-900/70 backdrop-blur sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500 text-slate-950 flex items-center justify-center font-bold">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <span className="font-bold text-lg text-white">ShareHub</span>
-          </div>
-
           <div className="flex items-center space-x-3">
             <button
               onClick={handleRefresh}
@@ -96,6 +97,14 @@ export default function PublicPage() {
             </button>
             
           </div>
+
+          <div className="flex items-center space-x-2">
+            <div >
+            </div>
+            <span className="font-bold text-lg text-white">السلام عليكم ورحمة الله وبركاته</span>
+          </div>
+
+         
         </div>
       </header>
 
@@ -179,7 +188,7 @@ export default function PublicPage() {
           <br/>        
 
           {/* 4 Stat Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 mt-6">
             <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-2xl">
               <div className="text-xs text-slate-400 flex justify-between items-center">
                 <span>Share Amount</span>
@@ -235,6 +244,19 @@ export default function PublicPage() {
               </div>
               <div className="text-[10px] text-slate-500 mt-0.5">Goal: ₹1,00,000</div>
             </div>
+
+            <div className="bg-slate-900/90 border border-emerald-500/30 p-4 rounded-2xl">
+              <div className="text-xs text-emerald-400 flex justify-between items-center">
+                <span>Refund Completed</span>
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="text-2xl font-bold text-emerald-400 mt-1">
+                ₹{(summary.refundCompletedAmount || 0).toLocaleString('en-IN')}
+              </div>
+              <div className="text-[10px] text-slate-500 mt-0.5">
+                {summary.refundCompletedCount || 0} contributor{(summary.refundCompletedCount || 0) === 1 ? '' : 's'}
+              </div>
+            </div>
           </div>
 
           {/* Progress Bar */}
@@ -262,7 +284,7 @@ export default function PublicPage() {
               </p>
             </div>
             <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono">
-              {contributors.length} verified
+              {contributors.length} Members
             </span>
           </div>
 
@@ -271,9 +293,9 @@ export default function PublicPage() {
               <thead className="bg-slate-950/60 uppercase font-semibold text-slate-400 border-b border-slate-800">
                 <tr>
                   <th className="px-4 py-3">#</th>
-                  <th className="px-4 py-3">Contributor Name</th>
+                  <th className="px-4 py-3">Name</th>
                   <th className="px-4 py-3">Shares</th>
-                  <th className="px-4 py-3">Money Paid</th>
+                  <th className="px-4 py-3">Paid</th>
                   <th className="px-4 py-3">Refund</th>
                 </tr>
               </thead>

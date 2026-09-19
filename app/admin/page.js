@@ -30,6 +30,8 @@ export default function AdminPage() {
     balanceSharesNeeded: 250,
     totalMoneyCollected: 0,
     balanceMoneyNeeded: 100000,
+    refundCompletedAmount: 0,
+    refundCompletedCount: 0,
   });
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -230,7 +232,7 @@ export default function AdminPage() {
       {/* Main Content */}
       <main className="max-w-7xl w-full mx-auto px-4 py-8 space-y-6 flex-1">
         {/* Metric Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4">
             <span className="text-[11px] text-slate-400">Total Shares</span>
             <div className="text-xl font-bold text-white mt-1">250</div>
@@ -263,6 +265,16 @@ export default function AdminPage() {
               ₹{summary.balanceMoneyNeeded.toLocaleString('en-IN')}
             </div>
             <span className="text-[10px] text-cyan-400/70">Goal: ₹1,00,000</span>
+          </div>
+
+          <div className="bg-slate-900 border border-emerald-500/30 rounded-2xl p-4 col-span-2 md:col-span-1">
+            <span className="text-[11px] text-emerald-400">Refund Completed</span>
+            <div className="text-xl font-bold text-emerald-400 mt-1">
+              ₹{(summary.refundCompletedAmount || 0).toLocaleString('en-IN')}
+            </div>
+            <span className="text-[10px] text-emerald-500/70">
+              {summary.refundCompletedCount || 0} contributor{(summary.refundCompletedCount || 0) === 1 ? '' : 's'}
+            </span>
           </div>
         </div>
 

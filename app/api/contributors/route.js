@@ -18,6 +18,12 @@ export async function GET() {
     const balanceSharesNeeded = Math.max(0, TOTAL_TARGET_SHARES - totalSharesReceived);
     const totalMoneyCollected = totalSharesReceived * PRICE_PER_SHARE;
     const balanceMoneyNeeded = Math.max(0, TOTAL_TARGET_SHARES * PRICE_PER_SHARE - totalMoneyCollected);
+    const refundCompletedAmount = contributors
+      .filter((contributor) => (contributor.refundStatus || 'Pending') === 'Completed')
+      .reduce((acc, curr) => acc + (Number(curr.amount) || 0), 0);
+    const refundCompletedCount = contributors.filter(
+      (contributor) => (contributor.refundStatus || 'Pending') === 'Completed'
+    ).length;
 
     return NextResponse.json({
       success: true,
@@ -29,6 +35,8 @@ export async function GET() {
         balanceSharesNeeded,
         totalMoneyCollected,
         balanceMoneyNeeded,
+        refundCompletedAmount,
+        refundCompletedCount,
       },
       data: contributors,
     });
