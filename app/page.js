@@ -280,7 +280,7 @@ export default function PublicPage() {
             <div>
               <h2 className="text-lg font-bold text-white">Contributors List</h2>
               <p className="text-xs text-slate-400 mt-0.5">
-                Names are masked (first and last letter only) for personal privacy.
+                
               </p>
             </div>
             <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono" style={{ color: '#ffffff' }}>
