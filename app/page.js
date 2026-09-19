@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, TrendingUp, Coins, Layers, CreditCard, Lock, ArrowRight, RefreshCw } from 'lucide-react';
+import { ShieldCheck, TrendingUp, Coins, Layers, CreditCard, RefreshCw, User } from 'lucide-react';
 
 /**
  * Mask function: displays only first and last letter of each word
@@ -101,7 +101,7 @@ export default function PublicPage() {
           <div className="flex items-center space-x-2">
             <div >
             </div>
-            <span className="font-bold text-lg text-white">السلام عليكم ورحمة الله وبركاته</span>
+            <span className="font-bold text-lg text-white"><ShieldCheck /></span>
           </div>
 
          
@@ -283,8 +283,8 @@ export default function PublicPage() {
                 Names are masked (first and last letter only) for personal privacy.
               </p>
             </div>
-            <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono">
-              {contributors.length} Members
+            <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono" style={{ color: '#ffffff' }}>
+              {contributors.length} <User className="w-3.5 h-3.5 inline-block ml-1" />
             </span>
           </div>
 
