@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ShieldCheck, TrendingUp, Coins, Layers, CreditCard, RefreshCw, User } from 'lucide-react';
+import { ShieldCheck, TrendingUp, Coins, Layers, CreditCard, Sun, User, Moon } from 'lucide-react';
 
 /**
  * Mask function: displays only first and last letter of each word
@@ -24,6 +24,7 @@ function maskName(fullName) {
 }
 
 export default function PublicPage() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [summary, setSummary] = useState({
     totalTargetShares: 250,
     pricePerShare: 400,
@@ -67,6 +68,15 @@ export default function PublicPage() {
   };
 
   useEffect(() => {
+    document.documentElement.classList.toggle('theme-dark', isDarkMode);
+    document.documentElement.classList.toggle('theme-light', !isDarkMode);
+
+    return () => {
+      document.documentElement.classList.remove('theme-dark', 'theme-light');
+    };
+  }, [isDarkMode]);
+
+  useEffect(() => {
     fetchData();
 
     const intervalId = setInterval(() => {
@@ -82,18 +92,24 @@ export default function PublicPage() {
   ).toFixed(1);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+    <div className={`min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans ${isDarkMode ? 'theme-dark' : 'theme-light'}`}>
       {/* Top Bar */}
       <header className="border-b border-slate-800 bg-slate-900/70 backdrop-blur sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <button
+              onClick={() => setIsDarkMode((current) => !current)}
+              type="button"
+              className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-400"
+              aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
+            >
+              {isDarkMode ? <Sun /> : <Moon />}
+            </button>
+            <button
               onClick={handleRefresh}
-              className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition"
               title="Refresh Data"
               aria-label="Refresh data"
             >
-              <RefreshCw className={`w-4 h-4 ${loading || refreshing ? 'animate-spin' : ''}`} />
             </button>
             
           </div>
@@ -139,19 +155,19 @@ export default function PublicPage() {
 
           </p>  
 
-           <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto" style={{color:'#ffffff'}}>
+           <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto" style={{color:'var(--theme-strong-text)'}}>
 
               أَخْبَرَهُ أَنَّ رَسُولَ اللَّهِ صلى الله عليه وسلم قَالَ
             
           </p>  
 
-          <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto" style={{color:'#ffffff'}}>
+          <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto" style={{color:'var(--theme-strong-text)'}}>
 
             الْمُسْلِمُ أَخُو الْمُسْلِمِ، لاَ يَظْلِمُهُ، وَلاَ يُسْلِمُهُ، وَمَنْ
             
           </p>   
 
-          <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto"style={{color:'#ffffff'}}>
+          <p className="text-slate-400 text-sm mt-1 max-w-xl ml-auto"style={{color:'var(--theme-strong-text)'}}>
 
             كَانَ فِي حَاجَةِ أَخِيهِ، كَانَ اللَّهُ فِي حَاجَتِهِ 
    
@@ -168,7 +184,7 @@ export default function PublicPage() {
               
           </p>
 
-           <p className="text-slate-400 text-sm mt-1 max-w-xl" style={{color: '#ffffff'}}>
+           <p className="text-slate-400 text-sm mt-1 max-w-xl" style={{color:'var(--theme-strong-text)'}}>
          
             Allah's Messenger (ﷺ)  said, "A Muslim is a brother of another Muslim.
              So he should neither oppress him nor hand him over to an oppressor.
@@ -182,7 +198,7 @@ export default function PublicPage() {
 
          
 
-          <h2 style={{color:'#ffffff',fontWeight:'800',fontSize:'17px'}} className="text-right" dir="rtl">Sahih al-Bukhari, 6951</h2> 
+          <h2 style={{color:'var(--theme-strong-text)',fontWeight:'800',fontSize:'17px'}} className="text-right" dir="rtl">Sahih al-Bukhari, 6951</h2> 
           </div> 
 
           <br/>        
@@ -283,7 +299,7 @@ export default function PublicPage() {
                 
               </p>
             </div>
-            <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono" style={{ color: '#ffffff' }}>
+            <span className="text-xs bg-slate-800 text-emerald-400 px-3 py-1 rounded-full font-mono" style={{ color: 'var(--theme-strong-text)' }}>
               {contributors.length} <User className="w-3.5 h-3.5 inline-block ml-1" />
             </span>
           </div>
