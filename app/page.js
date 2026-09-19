@@ -100,7 +100,7 @@ export default function PublicPage() {
             <button
               onClick={() => setIsDarkMode((current) => !current)}
               type="button"
-              className="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-400"
+              className="rounded-lg px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-400"
               aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
             >
               {isDarkMode ? <Sun /> : <Moon />}
