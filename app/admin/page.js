@@ -18,14 +18,11 @@ import {
   ArrowLeft,
   RefreshCw,
   AlertTriangle,
-  Sun,
-  Moon,
 } from 'lucide-react';
 
 const PRICE_PER_SHARE = 400;
 
 export default function AdminPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [contributors, setContributors] = useState([]);
   const [summary, setSummary] = useState({
     totalTargetShares: 250,
@@ -54,15 +51,6 @@ export default function AdminPage() {
   });
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('theme-dark', isDarkMode);
-    document.documentElement.classList.toggle('theme-light', !isDarkMode);
-
-    return () => {
-      document.documentElement.classList.remove('theme-dark', 'theme-light');
-    };
-  }, [isDarkMode]);
 
   // Fetch Data from MongoDB API
   const loadData = async () => {
@@ -224,19 +212,11 @@ export default function AdminPage() {
   }, [contributors, searchTerm, modeFilter]);
 
   return (
-    <div className={`min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans ${isDarkMode ? 'theme-dark' : 'theme-light'}`}>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
       {/* Header */}
       <header className="border-b border-slate-800 bg-slate-900/70 backdrop-blur sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setIsDarkMode((current) => !current)}
-              type="button"
-              className="rounded-lg   px-3 py-2 text-sm font-semibold text-slate-200 transition hover:border-emerald-400 hover:text-emerald-400"
-              aria-label={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-            >
-              {isDarkMode ? <Sun /> : <Moon />}
-            </button>
 
             <span className="font-bold text-base text-white ml-2 flex items-center gap-1.5">
               <Lock className="w-4 h-4 text-emerald-400" /> Admin Console
@@ -472,10 +452,9 @@ export default function AdminPage() {
               </div>
 
               <button
-                style={{ color: 'white' }}
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold py-2.5 rounded-xl transition"
+                className="w-full bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-white font-bold py-2.5 rounded-xl transition"
               >
                 {submitting ? 'Adding...' : 'Add Contributor'}
               </button>
