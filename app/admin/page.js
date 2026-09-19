@@ -2,10 +2,11 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import {
   Lock,
   PlusCircle,
-  TrendingUp,
   CreditCard,
   Banknote,
   Phone,
@@ -165,26 +166,38 @@ export default function AdminPage() {
     }
   };
 
-  const handleExportCSV = () => {
-    const headers = ['ID', 'Name', 'Phone', 'WhatsApp', 'UPI ID', 'Place', 'Payment Mode', 'Shares', 'Amount', 'Date'];
-    const rows = contributors.map((c) => [
-      c._id,
-      `"${c.name}"`,
-      `"${c.phone}"`,
-      `"${c.whatsapp}"`,
-      `"${c.upiId || ''}"`,
-      `"${c.place}"`,
-      c.paymentMode,
-      c.shares,
-      c.amount,
-      new Date(c.createdAt).toLocaleDateString(),
-    ]);
+  const handleExportPDF = () => {
+    const pdf = new jsPDF({ orientation: 'landscape' });
+    const exportDate = new Date().toLocaleDateString();
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const link = document.createElement('a');
-    link.href = encodeURI(csvContent);
-    link.download = `share_contributors_${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
+    pdf.setFontSize(16);
+    pdf.text('Share Contributors Report', 14, 15);
+    pdf.setFontSize(9);
+    pdf.setTextColor(100);
+    pdf.text(`Generated: ${exportDate} | Contributors: ${contributors.length}`, 14, 22);
+
+    autoTable(pdf, {
+      startY: 28,
+      head: [['ID', 'Name', 'Phone', 'WhatsApp', 'UPI ID', 'Place', 'Mode', 'Shares', 'Amount', 'Refund', 'Date']],
+      body: contributors.map((c) => [
+        c._id,
+        c.name,
+        c.phone,
+        c.whatsapp,
+        c.upiId || '',
+        c.place,
+        c.paymentMode,
+        c.shares,
+        `Rs. ${c.amount}`,
+        c.refundStatus || 'Pending',
+        new Date(c.createdAt).toLocaleDateString(),
+      ]),
+      styles: { fontSize: 8, cellPadding: 2.5 },
+      headStyles: { fillColor: [16, 185, 129] },
+      alternateRowStyles: { fillColor: [241, 245, 249] },
+    });
+
+    pdf.save(`share_contributors_${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 
   const filteredContributors = useMemo(() => {
@@ -219,11 +232,11 @@ export default function AdminPage() {
               <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             </button>
             <button
-              onClick={handleExportCSV}
+              onClick={handleExportPDF}
               className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-2 rounded-xl border border-slate-700 flex items-center space-x-1.5 transition"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Export CSV</span>
+              <span> PDF</span>
             </button>
           </div>
         </div>
@@ -299,7 +312,7 @@ export default function AdminPage() {
                 <label className="block text-slate-300 mb-1 font-medium">Full Name *</label>
                 <input
                   type="text"
-                  placeholder="e.g. Rahul Varma"
+                  placeholder="e.g. Yunus Ali"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-emerald-500"
